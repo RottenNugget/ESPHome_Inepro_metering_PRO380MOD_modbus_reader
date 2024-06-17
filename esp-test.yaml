@@ -1,0 +1,137 @@
+esphome:
+  name: esp-test
+  friendly_name: ESP_Test
+  
+
+esp8266:
+  board: nodemcuv2
+  restore_from_flash: true
+
+preferences:
+  flash_write_interval: 1min
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "lsxrmsYYzSYhBr+MP19ACf1P5wXRQ4b+mTyk/C7qjtw="
+
+ota:
+  password: "17c8f3bda12497b999b99f754a0c79c9"
+
+wifi:
+  ssid: "Secret"
+  password: "Secret"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp-Test Fallback Hotspot"
+    password: "vj0VV2h0bCXj"
+
+captive_portal:
+
+uart:
+  id: mod_bus
+  tx_pin: TX
+  rx_pin: RX
+  baud_rate: 9600
+  stop_bits: 1
+  parity: EVEN
+  data_bits: 8
+ 
+modbus:
+  id: modbus1
+  flow_control_pin: D5 #for use when you use a rs485 board without auto flow control. Like the rs485 max board.
+ 
+modbus_controller:
+  - id: mbuscontrol
+    address: 0x1
+    modbus_id: modbus1
+    setup_priority: -10
+    update_interval: 2sec      
+  
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "L1 Voltage"
+    address: 0x5002
+    unit_of_measurement: V
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "L2 Voltage"
+    address: 0x5004
+    unit_of_measurement: V
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "L3 Voltage"
+    address: 0x5006
+    unit_of_measurement: V
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "Grid Frequency"
+    address: 0x5008
+    unit_of_measurement: Hz
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 2
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "L1 Current"
+    address: 0x500C
+    unit_of_measurement: A
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "L2 Current"
+    address: 0x500E
+    unit_of_measurement: A
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "L3 Current"
+    address: 0x5010
+    unit_of_measurement: A
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 1
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "Total Active Power"
+    address: 0x5012
+    unit_of_measurement: kW
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 3
+  - platform: modbus_controller
+    modbus_controller_id: mbuscontrol
+    name: "Total Active Energy"
+    address: 0x6000
+    unit_of_measurement: kWh
+    value_type: FP32
+    register_type: holding
+    accuracy_decimals: 3
+
+#number:
+  #- platform: modbus_controller
+    #use_write_multiple: true
+    #modbus_controller_id: modbuscontroller
+    #id: L1_voltage
+    #name: "L1 Voltage"
+    #address: 0x5002
+    #unit_of_measurement: V
+    #value_type: FP32
